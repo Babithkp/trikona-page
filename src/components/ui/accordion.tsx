@@ -7,9 +7,16 @@ import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 function Accordion({
+  className,
   ...props
 }: React.ComponentProps<typeof AccordionPrimitive.Root>) {
-  return <AccordionPrimitive.Root data-slot="accordion" {...props} />;
+  return (
+    <AccordionPrimitive.Root
+      data-slot="accordion"
+      className={cn("divide-y divide-line", className)}
+      {...props}
+    />
+  );
 }
 
 function AccordionItem({
@@ -19,7 +26,7 @@ function AccordionItem({
   return (
     <AccordionPrimitive.Item
       data-slot="accordion-item"
-      className={cn("border-b last:border-b-0 bg-[#FAF6FF] data-[state=open]:bg-[#F2EBFD]", className)}
+      className={cn("group/item", className)}
       {...props}
     />
   );
@@ -35,13 +42,26 @@ function AccordionTrigger({
       <AccordionPrimitive.Trigger
         data-slot="accordion-trigger"
         className={cn(
-          "focus-visible:border-ring focus-visible:ring-ring/50 flex flex-1 items-start justify-between gap-4 rounded-md py-4 text-left text-sm font-medium transition-all outline-none cursor-pointer focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 [&[data-state=open]>svg]:bg-black [&[data-state=open]>svg]:text-white [&[data-state=open]>svg]:rotate-40",
+          "flex flex-1 cursor-pointer items-center justify-between gap-6 py-6 text-left",
+          "text-base font-medium text-ink transition-colors sm:text-lg",
+          "hover:text-brand data-[state=open]:text-ink",
           className,
         )}
         {...props}
       >
         {children}
-        <Plus className="pointer-events-none size-8 shrink-0 translate-y-0.5 rounded-full bg-white p-2 text-black transition-transform duration-200" />
+        <span
+          aria-hidden="true"
+          className={cn(
+            "grid size-9 shrink-0 place-items-center rounded-full border border-line-2 bg-surface text-ink-3",
+            "transition-[transform,background-color,color,border-color] duration-300",
+            "group-hover/item:border-brand-200 group-hover/item:text-brand",
+            "group-data-[state=open]/item:rotate-45 group-data-[state=open]/item:border-transparent",
+            "group-data-[state=open]/item:bg-gradient-brand group-data-[state=open]/item:text-white",
+          )}
+        >
+          <Plus className="size-4" />
+        </span>
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>
   );
@@ -55,10 +75,12 @@ function AccordionContent({
   return (
     <AccordionPrimitive.Content
       data-slot="accordion-content"
-      className="data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden text-sm"
+      className="overflow-hidden data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
       {...props}
     >
-      <div className={cn("pt-0 pb-4", className)}>{children}</div>
+      <div className={cn("max-w-[68ch] pr-12 pb-7 text-ink-3", className)}>
+        {children}
+      </div>
     </AccordionPrimitive.Content>
   );
 }

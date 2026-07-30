@@ -1,241 +1,84 @@
 "use client";
-import React, { useState } from "react";
-import logo from "../../public/fullLogo-white.png";
-import Image from "next/image";
+
+import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Drawer } from "antd";
-import { AlignJustify } from "lucide-react";
+
+import Logo from "./layout/Logo";
+import MobileNav from "./layout/MobileNav";
+import { Button } from "./ui/button";
+import { cn } from "@/lib/utils";
+import { navLinks } from "@/lib/site";
 
 export default function Header() {
-  const [open, setOpen] = useState(false);
-  const pathname = usePathname();
+  const pathname = usePathname() ?? "/";
+  const [scrolled, setScrolled] = React.useState(false);
 
-  const showDrawer = () => {
-    setOpen(true);
-  };
+  // The header is transparent over the hero and gains a surface once the page
+  // moves, so the fold stays open while navigation remains legible over content.
+  React.useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
-  const onClose = () => {
-    setOpen(false);
-  };
+  const isActive = (href: string) =>
+    pathname === href || pathname.startsWith(`${href}/`);
 
   return (
-    <header className="w-full pt-5 max-sm:pt-2">
-      <nav className="flex items-center justify-between rounded-2xl bg-[#8E8E8E1A] pr-8 max-sm:pr-2 py-2">
-        <Link href={"/"} className="z-1">
-          <Image
-            src={logo}
-            alt="logo"
-            height={100}
-            className="w-50 max-md:w-40 max-sm:w-30"
-          />
-        </Link>
-        <ul className="z-1 flex justify-between gap-5 text-lg font-[600] max-lg:w-fit max-lg:text-base max-sm:hidden">
-          <li>
-            <Link
-              href="/process"
-              style={{
-                background:
-                  pathname === "/process"
-                    ? "linear-gradient(90.79deg, #A632F2 0.68%, #FBA325 99.34%)"
-                    : "",
-                WebkitBackgroundClip: pathname === "/process" ? "text" : "",
-                WebkitTextFillColor:
-                  pathname === "/process" ? "transparent" : "",
-                display: pathname === "/process" ? "inline-block" : "",
-              }}
-            >
-              Our Process
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/portfolio"
-              style={{
-                background:
-                  pathname === "/portfolio"
-                    ? "linear-gradient(90.79deg, #A632F2 0.68%, #FBA325 99.34%)"
-                    : "",
-                WebkitBackgroundClip: pathname === "/portfolio" ? "text" : "",
-                WebkitTextFillColor:
-                  pathname === "/portfolio" ? "transparent" : "",
-                display: pathname === "/portfolio" ? "inline-block" : "",
-              }}
-            >
-              Portfolio
-            </Link>
-          </li>
-          
-          <li>
-            <Link
-              href="/services"
-              style={{
-                background:
-                  pathname === "/services"
-                    ? "linear-gradient(90.79deg, #A632F2 0.68%, #FBA325 99.34%)"
-                    : "",
-                WebkitBackgroundClip: pathname === "/services" ? "text" : "",
-                WebkitTextFillColor:
-                  pathname === "/services" ? "transparent" : "",
-                display: pathname === "/services" ? "inline-block" : "",
-              }}
-            >
-              Services
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/blog"
-              style={{
-                background:
-                  pathname === "/blog"
-                    ? "linear-gradient(90.79deg, #A632F2 0.68%, #FBA325 99.34%)"
-                    : "",
-                WebkitBackgroundClip: pathname === "/blog" ? "text" : "",
-                WebkitTextFillColor:
-                  pathname === "/blog" ? "transparent" : "",
-                display: pathname === "/blog" ? "inline-block" : "",
-              }}
-            >
-              Blog
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="careers"
-              style={{
-                background:
-                  pathname === "/careers"
-                    ? "linear-gradient(90.79deg, #A632F2 0.68%, #FBA325 99.34%)"
-                    : "",
-                WebkitBackgroundClip: pathname === "/careers" ? "text" : "",
-                WebkitTextFillColor:
-                  pathname === "/careers" ? "transparent" : "",
-                display: pathname === "/careers" ? "inline-block" : "",
-              }}
-            >
-              Careers
-            </Link>
-          </li>
-        </ul>
-        <Link
-          href={"/contactus"}
-          className="z-1 flex w-fit items-center gap-2 rounded-md bg-black px-6 py-3 text-base text-white transition-colors duration-300 ease-in-out hover:bg-gradient-to-r hover:from-[#A632F2] hover:to-[#FBA325] max-sm:hidden max-sm:px-1 max-sm:text-xs font-semibold"
-        >
-          Contact Us
-        </Link>
-        <button
-          onClick={showDrawer}
-          className="hidden w-fit px-3 text-white max-sm:block"
-        >
-          <AlignJustify size={22} color="black" />
-        </button>
-      </nav>
-      <Drawer
-        title={
-          <Link href={"/"} className="flex justify-end" onClick={onClose}>
-            <Image src={logo} alt="logo" height={100} width={150} />
-          </Link>
-        }
-        closable={{ "aria-label": "Close Button" }}
-        onClose={onClose}
-        open={open}
-      >
-        <ul className="z-1 flex flex-col justify-between gap-5 text-base font-[600] text-black">
-          <li>
-            <Link
-              onClick={onClose}
-              href="/process"
-              style={{
-                background:
-                  pathname === "/process"
-                    ? "linear-gradient(90.79deg, #A632F2 0.68%, #FBA325 99.34%)"
-                    : "",
-                WebkitBackgroundClip: pathname === "/process" ? "text" : "",
-                WebkitTextFillColor:
-                  pathname === "/process" ? "transparent" : "",
-                display: pathname === "/process" ? "inline-block" : "",
-                color: "black",
-              }}
-            >
-              Our Process
-            </Link>
-          </li>
-          <li>
-            <Link
-              onClick={onClose}
-              href="/portfolio"
-              style={{
-                background:
-                  pathname === "/portfolio"
-                    ? "linear-gradient(90.79deg, #A632F2 0.68%, #FBA325 99.34%)"
-                    : "",
-                WebkitBackgroundClip: pathname === "/portfolio" ? "text" : "",
-                WebkitTextFillColor: pathname === "/portfolio" ? "transparent" : "",
-                display: pathname === "/portfolio" ? "inline-block" : "",
-                color: "black",
-              }}
-            >
-              Portfolio
-            </Link>
-          </li>
-          <li>
-            <Link
-              onClick={onClose}
-              href="/services"
-              style={{
-                background:
-                  pathname === "/services"
-                    ? "linear-gradient(90.79deg, #A632F2 0.68%, #FBA325 99.34%)"
-                    : "",
-                WebkitBackgroundClip: pathname === "/services" ? "text" : "",
-                WebkitTextFillColor: pathname === "/services" ? "transparent" : "",
-                display: pathname === "/services" ? "inline-block" : "",
-                color: "black",
-              }}
-            >
-              Services
-            </Link>
-          </li>
-          <li>
-            <Link
-              onClick={onClose}
-              href="/blog"
-              style={{
-                background:
-                  pathname === "/blog"
-                    ? "linear-gradient(90.79deg, #A632F2 0.68%, #FBA325 99.34%)"
-                    : "",
-                WebkitBackgroundClip: pathname === "/blog" ? "text" : "",
-                WebkitTextFillColor: pathname === "/blog" ? "transparent" : "",
-                display: pathname === "/blog" ? "inline-block" : "",
-                color: "black",
-              }}
-            >
-              Blog
-            </Link>
-          </li>
-          <li>
-            <Link
-              onClick={onClose}
-              href="/careers"
-              style={{
-                background:
-                  pathname === "/careers"
-                    ? "linear-gradient(90.79deg, #A632F2 0.68%, #FBA325 99.34%)"
-                    : "",
-                WebkitBackgroundClip: pathname === "/careers" ? "text" : "",
-                WebkitTextFillColor:
-                  pathname === "/careers" ? "transparent" : "",
-                display: pathname === "/careers" ? "inline-block" : "",
-                color: "black",
-              }}
-            >
-              Careers
-            </Link>
-          </li>
-        </ul>
-      </Drawer>
+    <header
+      className={cn(
+        "sticky top-0 z-40 transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300",
+        scrolled
+          ? "border-b border-line bg-canvas/80 shadow-xs backdrop-blur-xl"
+          : "border-b border-transparent bg-transparent",
+      )}
+    >
+      <div className="container-page flex h-16 items-center justify-between gap-6 sm:h-18">
+        <Logo />
+
+        <nav aria-label="Main" className="hidden md:block">
+          <ul className="flex items-center gap-1">
+            {navLinks.map((link) => {
+              const active = isActive(link.href);
+              return (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    aria-current={active ? "page" : undefined}
+                    className={cn(
+                      "relative rounded-lg px-3.5 py-2 text-[0.9375rem] font-medium transition-colors duration-200",
+                      active
+                        ? "text-ink"
+                        : "text-ink-3 hover:text-ink",
+                    )}
+                  >
+                    {link.label}
+                    {/* Active indicator: a short gradient rule, not a colour
+                        change alone, so the state survives colour-blind and
+                        forced-colors viewing. */}
+                    <span
+                      aria-hidden="true"
+                      className={cn(
+                        "absolute inset-x-3.5 -bottom-0.5 h-0.5 rounded-full bg-gradient-brand transition-transform duration-300 ease-out",
+                        active ? "scale-x-100" : "scale-x-0",
+                      )}
+                    />
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+
+        <div className="flex items-center gap-2">
+          <Button asChild size="sm" className="max-md:hidden">
+            <Link href="/contactus">Start a project</Link>
+          </Button>
+          <MobileNav pathname={pathname} />
+        </div>
+      </div>
     </header>
   );
 }

@@ -1,18 +1,24 @@
-import Faq from "@/components/Faq";
-import BuiltSection from "@/components/Landing/BuiltSection";
-import HeroSection from "@/components/Landing/HeroSection";
-import ShowcaseSection from "@/components/Landing/ShowcaseSection";
-import Works from "@/components/Landing/Works";
-import RedirectToContact from "@/components/RedirectToContact";
+import CtaSection from "@/components/shared/CtaSection";
+import FaqSection from "@/components/shared/FaqSection";
+import Capabilities from "@/components/home/Capabilities";
+import Hero from "@/components/home/Hero";
+import Principles from "@/components/home/Principles";
+import ProcessPreview from "@/components/home/ProcessPreview";
+import WorkShowcase from "@/components/home/WorkShowcase";
+import JsonLd from "@/components/ui/JsonLd";
+import { servicesSchema } from "@/lib/seo";
+
 export default function Home() {
   return (
     <main>
-      <HeroSection />
-      <Works />
-      <BuiltSection/>
-      <ShowcaseSection/>
-      <Faq/>
-      <RedirectToContact/>
+      <JsonLd schema={servicesSchema} />
+      <Hero />
+      <Principles />
+      <Capabilities />
+      <ProcessPreview />
+      <WorkShowcase />
+      <FaqSection />
+      <CtaSection />
     </main>
   );
 }

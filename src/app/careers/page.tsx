@@ -1,175 +1,107 @@
-"use client";
-import React, { useState } from "react";
-import { Button } from "../../components/ui/button";
-import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-import LeftVector from "@/assets/LeftVector";
-import RightVector from "@/assets/RightVector";
-import { Upload } from "lucide-react";
+import CareersForm from "@/components/shared/CareersForm";
+import PageHero from "@/components/shared/PageHero";
+import JsonLd from "@/components/ui/JsonLd";
+import Reveal from "@/components/ui/Reveal";
+import { Container, Section } from "@/components/ui/Section";
+import { breadcrumbSchema, pageMetadata } from "@/lib/seo";
+import { site } from "@/lib/site";
 
-type FormData = {
-  firstName: string;
-  lastName: string;
-  role: string;
-  experience: string;
-  portfolio: string;
-  workType: string;
-};
+export const metadata = pageMetadata({
+  title: "Careers — Join Our Design & Development Team",
+  description:
+    "Join Trikona and work on meaningful digital products across UI/UX design, website development and web applications. We're always looking for curious, driven people.",
+  path: "/careers",
+});
 
-export default function Page() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [file, setFile] = useState<File | undefined>(undefined);
+const reasons = [
+  {
+    title: "Real ownership",
+    description:
+      "Small team, real responsibility. You'll own features end to end, not tickets handed down a chain.",
+  },
+  {
+    title: "Craft over volume",
+    description:
+      "We'd rather ship one considered product than five rushed ones. Quality is the point, not the constraint.",
+  },
+  {
+    title: "Design and engineering together",
+    description:
+      "Designers and developers sit in the same conversations from day one — no throwing work over a wall.",
+  },
+  {
+    title: "Work that ships",
+    description:
+      "Everything we build goes live and gets used. You'll have a portfolio of real products, not concepts.",
+  },
+];
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<FormData>();
-
-  const onSubmit = async (data: FormData) => {
-    // Append your Web3Forms access key directly
-    const formDataWithKey = {
-      ...data,
-      access_key: "c70ae29d-0e7a-4698-a790-f8189613bf96",
-    };
-    setIsLoading(true);
-
-    try {
-      const response = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(formDataWithKey),
-      });
-      console.log(response);
-      
-      if (response.ok) {
-        reset();
-        setFile(undefined);
-        toast.success(
-          "Thanks for contacting us! We will get back to you shortly.",
-          {
-            hideProgressBar: true,
-          },
-        );
-      } else {
-        toast.error("Something went wrong. Please try again later.");
-      }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error: unknown) {
-      toast.error(
-        "Something went wrong. Please check your internet connection.",
-      );
-    }
-    setIsLoading(false);
-  };
-
+export default function CareersPage() {
   return (
-    <section className="relative mt-10 flex flex-col items-center gap-5 overflow-hidden max-lg:flex-col max-md:px-5">
-      <div className="absolute left-0 blur-xl">
-        <LeftVector />
-      </div>
-      <div className="absolute right-0 blur-xl hidden md:block">
-        <RightVector />
-      </div>
-      <div className="my-5 flex w-full flex-col items-center gap-2">
-        <h2 className="flex w-200 flex-wrap items-center justify-center gap-3 text-6xl font-bold max-lg:text-4xl max-md:text-3xl max-sm:w-full max-sm:text-3xl">
-          Join our
-          <span
-            style={{
-              background:
-                "linear-gradient(90.79deg, #A632F2 0.68%, #FBA325 99.34%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              display: "inline-block",
-            }}
-          >
-            Team
-          </span>
-        </h2>
-        <p className="text-center font-medium md:text-xl">
-          Fill in the form and we will get back to you.
-        </p>
-      </div>
-      <form
-        className="z-10 flex flex-wrap justify-between gap-5 w-[80%] max-md:w-full"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <div className="w-[48%] max-lg:w-full">
-          <input
-            className="w-full rounded-md border border-black p-3"
-            placeholder="First Name"
-            type="text"
-            {...register("firstName", { required: true })}
-          />
-          {errors.firstName && (
-            <p className="mt-1 text-sm">First Name is required</p>
-          )}
-        </div>
-        <input
-          className="h-fit w-[48%] rounded-md border border-black p-3 max-lg:w-full"
-          placeholder="Last Name"
-          type="text"
-          {...register("lastName")}
-        />
-        <input
-          className="h-fit w-[48%] rounded-md border border-black p-3 max-lg:w-full"
-          placeholder="Role that you are applying for"
-          type="text"
-          {...register("role")}
-        />
-        <div className="w-[48%] max-lg:w-full">
-          <input
-            className="w-full rounded-md border border-black p-3"
-            placeholder="Experience"
-            type="text"
-            {...register("experience", { required: true })}
-          />
-          {errors.experience && (
-            <p className="mt-1 text-sm">Experience is required</p>
-          )}
-        </div>
-        <input
-          className="h-fit w-[48%] rounded-md border border-black p-3 max-lg:w-full"
-          placeholder="Portfolio/Linkedin URL"
-          type="text"
-          {...register("portfolio")}
-        />
-        <input
-          className="h-fit w-[48%] rounded-md border border-black p-3 max-lg:w-full"
-          placeholder="Preferred work type"
-          type="text"
-          {...register("workType")}
-        />
-        <label
-          className="flex h-30 w-full items-center justify-center gap-5 rounded-md border border-black p-2 px-3 text-sm text-slate-500 max-lg:w-full"
-          htmlFor="resume"
-        >
-          {file ? (
-            file && file?.name
-          ) : (
-            <>
-              <Upload size={20} />
-              Upload resume
-            </>
-          )}
-        </label>
-        <input
-          type="file"
-          className="hidden"
-          id="resume"
-          onChange={(e) => setFile(e?.target?.files?.[0])}
-        />
-        <Button
-          className="w-full cursor-pointer bg-black p-6 text-base text-white hover:bg-black/80"
-          disabled={isLoading}
-        >
-          {isLoading ? " Sending..." : "Submit"}
-        </Button>
-      </form>
-    </section>
+    <main>
+      <JsonLd
+        schema={breadcrumbSchema([{ name: "Careers", path: "/careers" }])}
+      />
+
+      <PageHero
+        breadcrumbs={[{ name: "Careers", path: "/careers" }]}
+        title={
+          <>
+            Build things people{" "}
+            <span className="text-gradient">actually use</span>
+          </>
+        }
+        description="We're always looking for curious, driven people who want to design, build and scale products that matter. Tell us what you're good at."
+      />
+
+      <Section compact aria-labelledby="why-heading">
+        <Container>
+          <h2 id="why-heading" className="sr-only">
+            Why join Trikona
+          </h2>
+          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {reasons.map((reason, i) => (
+              <Reveal
+                as="li"
+                key={reason.title}
+                delay={i * 70}
+                className="h-full rounded-xl border border-line bg-surface p-6 shadow-xs"
+              >
+                <h3 className="text-base font-semibold text-ink">
+                  {reason.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-ink-3">
+                  {reason.description}
+                </p>
+              </Reveal>
+            ))}
+          </ul>
+        </Container>
+      </Section>
+
+      <Section compact aria-labelledby="apply-heading" className="pt-0">
+        <Container>
+          <Reveal className="mx-auto max-w-3xl">
+            <div className="rounded-2xl border border-line bg-surface p-6 shadow-sm sm:p-10">
+              <h2 id="apply-heading" className="text-h3 text-ink">
+                Apply
+              </h2>
+              <p className="mt-2 mb-8 text-sm text-ink-3">
+                No open role that fits? Apply anyway — we keep good applications
+                on file. You can also email us at{" "}
+                <a
+                  href={`mailto:${site.email}`}
+                  className="font-medium text-brand underline-offset-4 hover:underline"
+                >
+                  {site.email}
+                </a>
+                .
+              </p>
+              <CareersForm />
+            </div>
+          </Reveal>
+        </Container>
+      </Section>
+    </main>
   );
 }

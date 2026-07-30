@@ -1,141 +1,150 @@
-"use client";
-import React, { useState } from "react";
-import { Button } from "../../components/ui/button";
-import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-import LeftVector from "@/assets/LeftVector";
-import RightVector from "@/assets/RightVector";
+import { Clock, Mail, MapPin, Phone } from "lucide-react";
 
-type FormData = {
-  firstName: string;
-  lastName: string;
-  contactNumber: string;
-  email: string;
-  message: string;
-};
+import ContactForm from "@/components/shared/ContactForm";
+import PageHero from "@/components/shared/PageHero";
+import JsonLd from "@/components/ui/JsonLd";
+import Reveal from "@/components/ui/Reveal";
+import { Container, Section } from "@/components/ui/Section";
+import { breadcrumbSchema, pageMetadata } from "@/lib/seo";
+import { site } from "@/lib/site";
 
-export default function Page() {
-  const [isLoading, setIsLoading] = useState(false);
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<FormData>();
+export const metadata = pageMetadata({
+  // The layout's title template already appends "| Trikona".
+  title: "Contact Us — Let's Build Your Website or Product",
+  description:
+    "Get in touch with Trikona to discuss your website, app or digital product. Tell us what you're building and we'll reply within two working days.",
+  path: "/contactus",
+});
 
-  const onSubmit = async (data: FormData) => {
-    // Append your Web3Forms access key directly
-    const formDataWithKey = {
-      ...data,
-      access_key: "c70ae29d-0e7a-4698-a790-f8189613bf96",
-    };
-    setIsLoading(true);
+const contactDetails = [
+  {
+    icon: Mail,
+    label: "Email",
+    value: site.email,
+    href: `mailto:${site.email}`,
+  },
+  {
+    icon: Phone,
+    label: "Phone",
+    value: site.phones[0],
+    href: `tel:${site.phones[0].replace(/\s/g, "")}`,
+  },
+  {
+    icon: Phone,
+    label: "Alternate",
+    value: site.phones[1],
+    href: `tel:${site.phones[1].replace(/\s/g, "")}`,
+  },
+  {
+    icon: MapPin,
+    label: "Studio",
+    value: `${site.locality}, ${site.region}, India`,
+  },
+];
 
-    try {
-      const response = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(formDataWithKey),
-      });
-
-      if (response.ok) {
-        reset();
-        toast.success(
-          "Thanks for contacting us! We will get back to you shortly.",
-          {
-            hideProgressBar: true,
-          },
-        );
-      } else {
-        toast.error("Something went wrong. Please try again later.");
-      }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error: unknown) {
-      toast.error(
-        "Something went wrong. Please check your internet connection.",
-      );
-    }
-    setIsLoading(false);
-  };
-
+export default function ContactPage() {
   return (
-    <section className="relative mt-10 flex flex-col gap-5 max-lg:flex-col max-md:px-0 overflow-hidden items-center">
-      <div className="absolute left-0 blur-xl">
-        <LeftVector />
-      </div>
-      <div className="absolute right-0 blur-xl">
-        <RightVector />
-      </div>
-      <div className="my-5 flex  flex-col items-center gap-5 w-[80%]">
-        <h2 className="flex w-200 flex-wrap items-center justify-center gap-3 text-5xl font-bold max-lg:text-4xl max-md:text-3xl max-sm:w-full max-sm:text-xl">
-          Get in touch with
-          <span
-            style={{
-              background:
-                "linear-gradient(90.79deg, #A632F2 0.68%, #FBA325 99.34%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              display: "inline-block",
-            }}
-          >
-            us
-          </span>
-        </h2>
-        <p className="text-center font-medium">
-          Fill in the form and we will get back to you.
-        </p>
-      </div>
-      <form
-        className="z-10 flex flex-wrap justify-between gap-5 w-[80%] max-md:w-full"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <div className="w-[48%] max-lg:w-full">
-          <input
-            className="w-full rounded-md border border-black p-3"
-            placeholder="First Name"
-            type="text"
-            {...register("firstName", { required: true })}
-          />
-          {errors.firstName && (
-            <p className="mt-1 text-sm">First Name is required</p>
-          )}
-        </div>
-        <input
-          className="h-fit w-[48%] rounded-md border border-black p-3 max-lg:w-full"
-          placeholder="Last Name"
-          type="text"
-          {...register("lastName")}
-        />
-        <input
-          className="h-fit w-[48%] rounded-md border border-black p-3 max-lg:w-full"
-          placeholder="Contact Number"
-          type="text"
-          {...register("contactNumber")}
-        />
-        <div className="w-[48%] max-lg:w-full">
-          <input
-            className="w-full rounded-md border border-black p-3"
-            placeholder="Email ID"
-            type="text"
-            {...register("email", { required: true })}
-          />
-          {errors.email && <p className="mt-1 text-sm">Email ID is required</p>}
-        </div>
-        <textarea
-          className="h-30 w-full rounded-md border border-black p-2 px-3 max-lg:w-full"
-          placeholder="Message...."
-          {...register("message")}
-        />
-        <Button
-          className="w-full cursor-pointer bg-black p-6 text-base text-white hover:bg-black/80"
-          disabled={isLoading}
-        >
-          {isLoading ? " Sending..." : "Submit"}
-        </Button>
-      </form>
-    </section>
+    <main>
+      <JsonLd
+        schema={breadcrumbSchema([{ name: "Contact", path: "/contactus" }])}
+      />
+
+      <PageHero
+        eyebrow="Contact"
+        breadcrumbs={[{ name: "Contact", path: "/contactus" }]}
+        title={
+          <>
+            Let&apos;s talk about{" "}
+            <span className="text-gradient">what you&apos;re building</span>
+          </>
+        }
+        description="Fill in the form and we'll come back within two working days with initial thoughts and a suggested next step."
+      />
+
+      <Section compact aria-labelledby="contact-form-heading">
+        <Container>
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] lg:gap-12">
+            {/* Details panel */}
+            <Reveal>
+              <div className="relative isolate flex h-full flex-col justify-between gap-10 overflow-hidden rounded-2xl border border-line bg-surface p-8 shadow-sm">
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 -z-10"
+                >
+                  <div className="absolute inset-0 bg-dots opacity-70" />
+                  <div
+                    className="absolute -top-28 -right-20 size-72 rounded-full blur-[90px] opacity-60"
+                    style={{
+                      background:
+                        "radial-gradient(circle, rgba(166,50,242,0.32), transparent 70%)",
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <h2 className="text-h3 text-ink">Talk to the team</h2>
+                  <p className="mt-3 text-sm leading-relaxed text-ink-3">
+                    Prefer email or a call? Reach us directly — we read every
+                    message ourselves.
+                  </p>
+                </div>
+
+                <dl className="flex flex-col gap-5">
+                  {contactDetails.map((detail) => (
+                    <div key={detail.label} className="flex items-start gap-3">
+                      <span
+                        aria-hidden="true"
+                        className="mt-0.5 grid size-9 shrink-0 place-items-center rounded-lg border border-line bg-surface-2 text-ink-3"
+                      >
+                        <detail.icon className="size-4" />
+                      </span>
+                      <div>
+                        <dt className="text-xs tracking-wide text-ink-4 uppercase">
+                          {detail.label}
+                        </dt>
+                        <dd className="mt-0.5 text-sm font-medium text-ink">
+                          {detail.href ? (
+                            <a
+                              href={detail.href}
+                              className="transition-colors hover:text-brand"
+                            >
+                              {detail.value}
+                            </a>
+                          ) : (
+                            detail.value
+                          )}
+                        </dd>
+                      </div>
+                    </div>
+                  ))}
+                </dl>
+
+                <p className="flex items-center gap-2 border-t border-line pt-6 text-sm text-ink-3">
+                  <Clock aria-hidden="true" className="size-4 text-ink-4" />
+                  Typical reply time: two working days
+                </p>
+              </div>
+            </Reveal>
+
+            {/* Form */}
+            <Reveal delay={80}>
+              <div className="rounded-2xl border border-line bg-surface p-6 shadow-sm sm:p-10">
+                <h2 id="contact-form-heading" className="text-h3 text-ink">
+                  Start a project
+                </h2>
+                <p className="mt-2 mb-8 text-sm text-ink-3">
+                  Fields marked with{" "}
+                  <span className="text-brand" aria-hidden="true">
+                    *
+                  </span>
+                  <span className="sr-only">an asterisk</span> are required.
+                </p>
+                <ContactForm />
+              </div>
+            </Reveal>
+          </div>
+        </Container>
+      </Section>
+    </main>
   );
 }

@@ -1,151 +1,177 @@
-import LeftVector from "@/assets/LeftVector";
-import RightVector from "@/assets/RightVector";
-import prisma from "@/lib/prisma";
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 
-type PageParams = {
-  params: Promise<{ slug: string }>;
-};
+import PostCard from "@/components/blog/PostCard";
+import CtaSection from "@/components/shared/CtaSection";
+import Aurora from "@/components/ui/Aurora";
+import JsonLd from "@/components/ui/JsonLd";
+import Reveal from "@/components/ui/Reveal";
+import { Container, Section } from "@/components/ui/Section";
+import { breadcrumbSchema, pageMetadata } from "@/lib/seo";
+import { formatPostDate, getPostBySlug, getPublishedPosts } from "@/lib/blog";
+import { markdownToHtml } from "@/lib/markdown";
+import { site, siteUrl } from "@/lib/site";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+type PageParams = { params: Promise<{ slug: string }> };
 
-export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
+/** Matches the blog index: content refreshes without a redeploy. */
+export const revalidate = 300;
+
+export async function generateMetadata({ params }: PageParams) {
   const { slug } = await params;
-  const post = await prisma.blog.findUnique({
-    where: { slug },
-    select: {
-      title: true,
-      description: true,
-      imageUrl: true,
-    },
-  });
+  const post = await getPostBySlug(slug);
 
   if (!post) {
-    return {
-      title: "Blog Post Not Found | Trikona",
-      alternates: { canonical: `/blog/${slug}` },
-    };
+    return pageMetadata({
+      title: "Article not found",
+      description: "This article could not be found.",
+      path: `/blog/${slug}`,
+      noIndex: true,
+    });
   }
 
-  return {
-    title: `${post.title} | Trikona Blog`,
+  const metadata = pageMetadata({
+    title: post.title,
     description: post.description,
-    alternates: { canonical: `/blog/${slug}` },
-    openGraph: {
-      title: post.title,
-      description: post.description,
-      url: `/blog/${slug}`,
-      type: "article",
-      images: post.imageUrl ? [{ url: post.imageUrl }] : undefined,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: post.title,
-      description: post.description,
-      images: post.imageUrl ? [post.imageUrl] : undefined,
-    },
-  };
+    path: `/blog/${slug}`,
+    type: "article",
+  });
+
+  if (post.imageUrl) {
+    metadata.openGraph = {
+      ...metadata.openGraph,
+      images: [{ url: post.imageUrl, alt: post.title }],
+    };
+    metadata.twitter = { ...metadata.twitter, images: [post.imageUrl] };
+  }
+
+  return metadata;
 }
 
 export default async function BlogPostPage({ params }: PageParams) {
-  const blogs = await prisma.blog.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
   const { slug } = await params;
-  const post = await prisma.blog.findUnique({
-    where: { slug },
-  });
+  const post = await getPostBySlug(slug);
 
-  if (!post) {
-    notFound();
-  }
+  if (!post) notFound();
 
-  const blogPostingSchema = {
+  const allPosts = await getPublishedPosts();
+  // Previously the "similar topics" list included the article you were
+  // already reading.
+  const related = allPosts.filter((item) => item.slug !== slug).slice(0, 3);
+
+  const publishedAt = typeof post.createdAt === 'string'
+    ? post.createdAt
+    : post.createdAt.toISOString();
+
+  const articleSchema = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: post.title,
     description: post.description,
-    datePublished: post.createdAt.toISOString(),
-    dateModified: post.createdAt.toISOString(),
-    mainEntityOfPage: `${siteUrl}/blog/${post.slug}`,
+    datePublished: publishedAt,
+    dateModified: publishedAt,
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${siteUrl}/blog/${slug}` },
     image: post.imageUrl ? [post.imageUrl] : undefined,
-    author: {
-      "@type": "Organization",
-      name: "Trikona",
-    },
-    publisher: {
-      "@type": "Organization",
-      name: "Trikona",
-      logo: {
-        "@type": "ImageObject",
-        url: `${siteUrl}/Logo_white.png`,
-      },
-    },
+    timeRequired: `PT${post.readMin}M`,
+    author: { "@type": "Organization", name: site.name, url: siteUrl },
+    publisher: { "@id": `${siteUrl}/#organization` },
+    inLanguage: "en",
   };
 
   return (
-    <section className="relative flex flex-col items-center justify-center gap-8 py-20 max-lg:overflow-hidden">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingSchema) }}
+    <main>
+      <JsonLd
+        schema={[
+          articleSchema,
+          breadcrumbSchema([
+            { name: "Blog", path: "/blog" },
+            { name: post.title, path: `/blog/${slug}` },
+          ]),
+        ]}
       />
-      <div className="absolute left-0 blur-xl md:block">
-        <LeftVector />
-      </div>
-      <div className="absolute right-0 blur-xl">
-        <RightVector />
-      </div>
 
-      <h1 className="text-center text-4xl font-bold">{post.title}</h1>
-      <h2 className="text-center text-xl">{post.description}</h2>
-      <div className="flex flex-col gap-3">
-        {post.imageUrl && (
-          <Image
-            src={post.imageUrl}
-            alt={post.title}
-            width={1000}
-            height={600}
-            className="rounded-xl"
-          />
-        )}
-        <div className="flex justify-end gap-2">
-          <p>{post.createdAt.toUTCString().slice(0, 17)}</p>
-          <p>{post.readMin} mins read</p>
-        </div>
-      </div>
+      <article>
+        <header className="relative isolate -mt-16 overflow-hidden pt-28 pb-10 sm:-mt-18 sm:pt-32">
+          <Aurora variant="soft" />
+          <Container>
+            <div className="mx-auto max-w-3xl">
+              <Link
+                href="/blog"
+                className="inline-flex items-center gap-2 text-sm text-ink-3 transition-colors hover:text-ink"
+              >
+                <ArrowLeft aria-hidden="true" className="size-4" />
+                All articles
+              </Link>
 
-      <div dangerouslySetInnerHTML={{ __html: post.content }} />
-      <div>
-        <p className="text-start text-lg font-bold">Similar Topics</p>
-      </div>
-      <div className="grid grid-cols-3 gap-5 max-lg:grid-cols-2 max-sm:grid-cols-1">
-        {blogs.map((blog) => (
-          <Link
-            className="z-1 flex cursor-pointer flex-col gap-5"
-            key={blog.id}
-            href={`/blog/${blog.slug}`}
-          >
-            {blog.imageUrl && (
-              <Image
-                src={blog.imageUrl}
-                alt={blog.title}
-                width={500}
-                height={150}
-                className="rounded-xl"
-              />
-            )}
-            <div className="flex flex-col justify-between gap-2">
-              <p className="font-bold">{blog.title}</p>
-              <p className="text-sm">{blog.description}</p>
+              <Reveal className="mt-8 flex flex-col gap-5">
+                <p className="flex items-center gap-2 text-sm text-ink-4">
+                  <time dateTime={publishedAt}>
+                    {formatPostDate(post.createdAt)}
+                  </time>
+                  <span aria-hidden="true">·</span>
+                  <span>{post.readMin} min read</span>
+                </p>
+
+                <h1 className="text-h1 text-ink">{post.title}</h1>
+                <p className="text-lead text-ink-3">{post.description}</p>
+              </Reveal>
             </div>
-          </Link>
-        ))}
-      </div>
-    </section>
+          </Container>
+        </header>
+
+        {post.imageUrl ? (
+          <Container>
+            <Reveal className="mx-auto max-w-4xl">
+              <Image
+                src={post.imageUrl}
+                alt={post.title}
+                width={1600}
+                height={900}
+                priority
+                sizes="(max-width: 1024px) 92vw, 896px"
+                className="aspect-[16/9] w-full rounded-2xl border border-line object-cover shadow-md"
+              />
+            </Reveal>
+          </Container>
+        ) : null}
+
+        <Section compact>
+          <Container>
+            {/* Markdown content converted to HTML. Styled by .prose-trikona so post
+                bodies inherit the site's typography instead of browser
+                defaults. */}
+            <div
+              className="prose-trikona mx-auto max-w-[70ch]"
+              dangerouslySetInnerHTML={{ __html: markdownToHtml(post.content) }}
+            />
+          </Container>
+        </Section>
+      </article>
+
+      {related.length > 0 ? (
+        <Section
+          compact
+          aria-labelledby="related-posts-heading"
+          className="border-t border-line bg-surface"
+        >
+          <Container>
+            <h2 id="related-posts-heading" className="text-h3 text-ink">
+              Keep reading
+            </h2>
+            <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {related.map((item, i) => (
+                <Reveal as="li" key={item.id} delay={i * 80} className="flex">
+                  <PostCard post={item} />
+                </Reveal>
+              ))}
+            </ul>
+          </Container>
+        </Section>
+      ) : null}
+
+      <CtaSection />
+    </main>
   );
 }

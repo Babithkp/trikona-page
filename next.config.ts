@@ -1,7 +1,11 @@
-// next.config.js
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  poweredByHeader: false,
+
   images: {
+    // Modern formats first; Next falls back automatically.
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
         protocol: "https",
@@ -10,23 +14,26 @@ const nextConfig = {
       },
     ],
   },
-  webpack(config: { module: { rules: { test: RegExp; use: { loader: string; options: { publicPath: string; outputPath: string; name: string; }; }; }[]; }; }) {
-    config.module.rules.push({
-      test: /\.(mp4|webm|ogg)$/,
-      use: {
-        loader: 'file-loader',
-        options: {
-          publicPath: '/_next/static/videos/',
-          outputPath: 'static/videos/',
-          name: '[name].[hash].[ext]',
-        },
-      },
-      
-    });
 
-    return config;
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
+          },
+        ],
+      },
+    ];
   },
-  
 };
 
-module.exports = nextConfig;
+// The previous config registered a file-loader rule for .mp4/.webm/.ogg, but
+// no video is ever imported as a module — they are served from /public by
+// path — so the rule (and the file-loader dependency) did nothing.
+export default nextConfig;
