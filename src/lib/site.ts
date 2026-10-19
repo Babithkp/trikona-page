@@ -23,7 +23,7 @@ export const site = {
   phones: ["+91 96204 23719", "+91 81970 59845"],
   socials: [
     { label: "LinkedIn", href: "https://www.linkedin.com/company/trikonatech/" },
-    { label: "Instagram", href: "https://www.instagram.com/trikonaofficial" },
+    { label: "Instagram", href: "https://www.instagram.com/trikona.tech/" },
     { label: "X", href: "https://x.com/trikona_tech" },
   ],
 } as const;
