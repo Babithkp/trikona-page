@@ -1,14 +1,18 @@
 import type { StaticImageData } from "next/image";
 
-import slnDashboard from "@/assets/sln-dashboard.png";
+import logisticsDashboard from "@/assets/logistics.png";
 import eventraScreen from "@/assets/eventra-leftmost.jpg";
 import eventraScreenAlt from "@/assets/eventra-rightmost.jpg";
 import ensProductionsShot from "@/assets/ens-productions.webp";
 import jsonDashboardShot from "@/assets/json-dashboard.png";
 
 export type ProjectMedia = {
-  /** Chooses the frame treatment: wide captures vs. portrait app screens. */
-  frame: "browser" | "phone";
+  /**
+   * Chooses the frame treatment: wide captures in a browser chrome,
+   * portrait app screens in a phone shell, or "full" for an image shown
+   * edge-to-edge with no mockup wrapped around it.
+   */
+  frame: "browser" | "phone" | "full";
   images: StaticImageData[];
   /** Written for screen readers and image search — never a filename. */
   alt: string;
@@ -21,8 +25,8 @@ export type ProjectMedia = {
  */
 export const projectMedia: Record<string, ProjectMedia> = {
   "logistics-billing-software": {
-    frame: "browser",
-    images: [slnDashboard],
+    frame: "full",
+    images: [logisticsDashboard],
     alt: "Logistics billing platform dashboard showing lorry receipts, freight memos and outstanding payment summaries.",
   },
   eventra: {
