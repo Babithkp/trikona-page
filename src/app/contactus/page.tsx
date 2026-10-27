@@ -1,18 +1,20 @@
-import { Clock, Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
 
-import ContactForm from "@/components/shared/ContactForm";
+import HeroLeadForm from "@/components/shared/HeroLeadForm";
 import PageHero from "@/components/shared/PageHero";
+import { WhatsAppIcon } from "@/components/shared/WhatsAppButton";
 import JsonLd from "@/components/ui/JsonLd";
 import Reveal from "@/components/ui/Reveal";
 import { Container, Section } from "@/components/ui/Section";
 import { breadcrumbSchema, pageMetadata } from "@/lib/seo";
 import { site } from "@/lib/site";
+import { whatsappHref } from "@/lib/whatsapp";
 
 export const metadata = pageMetadata({
   // The layout's title template already appends "| Trikona".
-  title: "Contact Us — Let's Build Your Website or Product",
+  title: "Contact Us: Let's Build Your Website or Product",
   description:
-    "Get in touch with Trikona to discuss your website, app or digital product. Tell us what you're building and we'll reply within two working days.",
+    "Get in touch with Trikona to discuss your website, app or digital product. Tell us what you're building and we'll reply.",
   path: "/contactus",
 });
 
@@ -22,6 +24,15 @@ const contactDetails = [
     label: "Email",
     value: site.email,
     href: `mailto:${site.email}`,
+  },
+  {
+    icon: WhatsAppIcon,
+    label: "WhatsApp",
+    value: "Chat with us",
+    href: whatsappHref(
+      "Hi, I'd like to talk about building a product with Trikona.",
+    ),
+    external: true,
   },
   {
     icon: Phone,
@@ -50,15 +61,13 @@ export default function ContactPage() {
       />
 
       <PageHero
-        eyebrow="Contact"
-        breadcrumbs={[{ name: "Contact", path: "/contactus" }]}
         title={
           <>
             Let&apos;s talk about{" "}
             <span className="text-gradient">what you&apos;re building</span>
           </>
         }
-        description="Fill in the form and we'll come back within two working days with initial thoughts and a suggested next step."
+        description="Fill in the form and we'll come back with initial thoughts and a suggested next step."
       />
 
       <Section compact aria-labelledby="contact-form-heading">
@@ -84,7 +93,7 @@ export default function ContactPage() {
                 <div>
                   <h2 className="text-h3 text-ink">Talk to the team</h2>
                   <p className="mt-3 text-sm leading-relaxed text-ink-3">
-                    Prefer email or a call? Reach us directly — we read every
+                    Prefer email or a call? Reach us directly. We read every
                     message ourselves.
                   </p>
                 </div>
@@ -106,6 +115,8 @@ export default function ContactPage() {
                           {detail.href ? (
                             <a
                               href={detail.href}
+                              target={detail.external ? "_blank" : undefined}
+                              rel={detail.external ? "noreferrer noopener" : undefined}
                               className="transition-colors hover:text-brand"
                             >
                               {detail.value}
@@ -118,11 +129,6 @@ export default function ContactPage() {
                     </div>
                   ))}
                 </dl>
-
-                <p className="flex items-center gap-2 border-t border-line pt-6 text-sm text-ink-3">
-                  <Clock aria-hidden="true" className="size-4 text-ink-4" />
-                  Typical reply time: two working days
-                </p>
               </div>
             </Reveal>
 
@@ -139,7 +145,7 @@ export default function ContactPage() {
                   </span>
                   <span className="sr-only">an asterisk</span> are required.
                 </p>
-                <ContactForm />
+                <HeroLeadForm source="contactus" />
               </div>
             </Reveal>
           </div>

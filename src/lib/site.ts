@@ -15,7 +15,7 @@ export const site = {
   legalName: "Trikona Tech",
   tagline: "Design. Build. Scale.",
   description:
-    "Trikona is a Bengaluru-based product studio building websites, web apps and MVPs — combining UI/UX design, scalable engineering and clear product strategy.",
+    "A product studio building custom software, mobile apps and websites for growing businesses.",
   locality: "Bengaluru",
   region: "Karnataka",
   country: "IN",
@@ -32,9 +32,18 @@ export const site = {
 export const navLinks = [
   { href: "/services", label: "Services" },
   { href: "/process", label: "Process" },
-  { href: "/portfolio", label: "Work" },
+  { href: "/portfolio", label: "Portfolio" },
   { href: "/blog", label: "Blog" },
-  { href: "/careers", label: "Careers" },
+] as const;
+
+/**
+ * Dedicated, single-offer pages built for paid traffic. Header and footer
+ * drop the full site nav on these routes so an ad click has one way forward
+ * (the lead form) instead of five ways to leave.
+ */
+export const landingPaths = [
+  "/custom-software-development",
+  "/custom-software-development-intl",
 ] as const;
 
 /* -------------------------------------------------------------------------- */
@@ -51,23 +60,38 @@ export type Capability = {
 
 export const capabilities: Capability[] = [
   {
-    id: "design",
+    id: "custom-software",
     index: "01",
-    title: "Branding & UI/UX Design",
+    title: "Custom Software Development",
     summary:
-      "We resolve the problem before we style the pixels — research, structure, then interface.",
+      "Internal tools, billing systems and MVPs built around how your team already works, not a generic template.",
     items: [
-      "UX research & wireframing",
-      "High-fidelity UI design",
-      "Interactive prototyping",
-      "Design systems & style guides",
-      "Logo design & visual identity",
-      "Mobile-responsive layouts",
+      "Internal tools & dashboards",
+      "Workflow automation",
+      "Custom billing & CRM systems",
+      "MVP development",
+      "Legacy Software Modernization",
+      "API integrations",
+    ],
+  },
+  {
+    id: "mobile",
+    index: "02",
+    title: "Mobile App Development",
+    summary:
+      "Native and cross-platform apps built for how people actually use them on the go.",
+    items: [
+      "iOS & Android app development",
+      "Cross-platform (React Native / Flutter)",
+      "App Store & Play Store deployment",
+      "Push notifications & offline support",
+      "Third-party API & SDK integration",
+      "Post-launch updates & maintenance",
     ],
   },
   {
     id: "build",
-    index: "02",
+    index: "03",
     title: "Web & App Development",
     summary:
       "Component-driven front ends and dependable back ends, built to be extended rather than rewritten.",
@@ -82,7 +106,7 @@ export const capabilities: Capability[] = [
   },
   {
     id: "launch",
-    index: "03",
+    index: "04",
     title: "Launch & Support",
     summary:
       "Shipping is a milestone, not the finish line. We stay on after go-live.",
@@ -92,6 +116,21 @@ export const capabilities: Capability[] = [
       "Cross-browser & device verification",
       "Security & backup setup",
       "Post-launch monitoring & support",
+    ],
+  },
+  {
+    id: "design",
+    index: "05",
+    title: "Branding & UI/UX Design",
+    summary:
+      "We resolve the problem before we style the pixels: research, structure, then interface.",
+    items: [
+      "UX research & wireframing",
+      "High-fidelity UI design",
+      "Interactive prototyping",
+      "Design systems & style guides",
+      "Logo design & visual identity",
+      "Mobile-responsive layouts",
     ],
   },
 ];
@@ -111,28 +150,16 @@ export type Service = {
 
 export const services: Service[] = [
   {
-    slug: "brand-identity-strategy",
-    title: "Brand Identity & Strategy",
+    slug: "custom-software-development",
+    title: "Custom Software Development",
     description:
-      "Craft a memorable brand identity — logo, colour palette and guidelines — that lines up with where the business is actually going.",
-    image: "brand",
-    deliverables: ["Logo & marks", "Colour & type system", "Brand guidelines"],
-  },
-  {
-    slug: "ui-ux-design",
-    title: "UI/UX Design",
-    description:
-      "Design seamless, user-friendly digital experiences that hold attention and move people towards the action that matters.",
-    image: "design",
-    deliverables: ["User flows", "Wireframes & prototypes", "Design system"],
-  },
-  {
-    slug: "website-development",
-    title: "Website Design & Development",
-    description:
-      "From a focused landing page to a full custom site — responsive, fast, and built to rank.",
-    image: "website",
-    deliverables: ["Responsive build", "CMS integration", "SEO foundations"],
+      "Internal tools, billing systems and MVPs built around how your team already works, and take the manual work out of it.",
+    image: "custom",
+    deliverables: [
+      "Internal tools",
+      "Third-party integrations",
+      "Automation",
+    ],
   },
   {
     slug: "mobile-app-development",
@@ -143,24 +170,36 @@ export const services: Service[] = [
     deliverables: ["Native-feel UI", "API integration", "Store deployment"],
   },
   {
+    slug: "website-development",
+    title: "Website Design & Development",
+    description:
+      "From a focused landing page to a full custom site: responsive, fast, and built to rank.",
+    image: "website",
+    deliverables: ["Responsive build", "CMS integration", "SEO foundations"],
+  },
+  {
+    slug: "ui-ux-design",
+    title: "UI/UX Design",
+    description:
+      "Design seamless, user-friendly digital experiences that hold attention and move people towards the action that matters.",
+    image: "design",
+    deliverables: ["User flows", "Wireframes & prototypes", "Design system"],
+  },
+  {
+    slug: "brand-identity-strategy",
+    title: "Brand Identity & Strategy",
+    description:
+      "Craft a memorable brand identity: logo, colour palette and guidelines that line up with where the business is actually going.",
+    image: "brand",
+    deliverables: ["Logo & marks", "Colour & type system", "Brand guidelines"],
+  },
+  {
     slug: "desktop-application-development",
     title: "Desktop Application Development",
     description:
       "Powerful desktop applications built around real workflows, with the performance and reliability that day-to-day operations demand.",
     image: "desktop",
     deliverables: ["Cross-platform builds", "Offline support", "Auto-updates"],
-  },
-  {
-    slug: "custom-digital-solutions",
-    title: "Custom Digital Solutions",
-    description:
-      "Tailored software and integrations that fit the way the business already runs, and take the manual work out of it.",
-    image: "custom",
-    deliverables: [
-      "Internal tools",
-      "Third-party integrations",
-      "Automation",
-    ],
   },
 ];
 
@@ -198,7 +237,7 @@ export const processSteps: ProcessStep[] = [
     title: "Design",
     description: "Crafting UI/UX aligned with brand vision and user needs.",
     detail:
-      "Wireframes first, then high-fidelity interfaces built on a reusable design system — so the tenth screen costs less to make than the first.",
+      "Wireframes first, then high-fidelity interfaces built on a reusable design system, so the tenth screen costs less to make than the first.",
     media: { src: "/Scene-4.gif", type: "image" },
   },
   {
@@ -222,7 +261,7 @@ export const processSteps: ProcessStep[] = [
     title: "Launch & Support",
     description: "Deployment, monitoring, and continuous improvement.",
     detail:
-      "Hosting, domains, backups and monitoring configured properly at launch — followed by the support that keeps the product healthy as it grows.",
+      "Hosting, domains, backups and monitoring configured properly at launch, followed by the support that keeps the product healthy as it grows.",
     media: { src: "/Scene-7.gif", type: "image" },
   },
 ];
@@ -250,7 +289,7 @@ export const projects: Project[] = [
     name: "Logistics Billing Software",
     category: "Custom software",
     summary:
-      "A custom billing platform that manages lorry receipts, freight memos, customer invoices and payments in one place — replacing an error-prone spreadsheet workflow across multiple branches.",
+      "A custom billing platform that manages lorry receipts, freight memos, customer invoices and payments in one place, replacing an error-prone spreadsheet workflow across multiple branches.",
     href: "/portfolio/logistics-billing-software",
     stack: ["React", "Tauri", "Node.js", "MongoDB"],
     metrics: [
@@ -261,11 +300,54 @@ export const projects: Project[] = [
     accent: "#B2D5F2",
   },
   {
+    slug: "esports-dashboard",
+    name: "Esports Tournament Dashboard",
+    category: "Custom Web Application",
+    summary:
+      "Real-time esports dashboard generating JSON outputs for vMix broadcast integration, managing teams, players, matches and live statistics with seamless broadcast automation.",
+    href: "/portfolio/esports-dashboard",
+    stack: ["React", "Node.js", "MongoDB", "Express"],
+    metrics: [
+      { label: "Real-time data sync", value: "Sub-100ms" },
+      { label: "Broadcast integration", value: "vMix-ready" },
+      { label: "JSON export", value: "Automated" },
+    ],
+    accent: "#00D9FF",
+  },
+  {
+    slug: "billsoft-frontend",
+    name: "Billsoft GST Billing Suite",
+    category: "Custom software",
+    summary:
+      "A Tauri desktop billing suite for a retail client that replaces spreadsheet-based GST billing with GSTIN-validated invoices and quotes, auto-generated PDFs, and centralised inventory and expense tracking.",
+    href: "/portfolio/billsoft-frontend",
+    stack: ["Tauri", "React", "TypeScript", "React-PDF", "Axios"],
+    metrics: [
+      { label: "Invoicing time reduced", value: "70%" },
+      { label: "GST compliance", value: "100%" },
+    ],
+    accent: "#FDE68A",
+  },
+  {
+    slug: "rmr-frontend",
+    name: "Multi-Outlet Retail & Inventory Platform",
+    category: "Custom software",
+    summary:
+      "A React web app that gives multi-outlet retail and F&B operators one dashboard to reconcile daily opening and closing stock, track BOM-based recipes, and manage orders and returns across every location.",
+    href: "/portfolio/rmr-frontend",
+    stack: ["React", "TypeScript", "Ant Design", "ExcelJS", "Axios"],
+    metrics: [
+      { label: "Stock reconciliation time", value: "65% faster" },
+      { label: "Outlets managed from one dashboard", value: "30+" },
+    ],
+    accent: "#FCA5A5",
+  },
+  {
     slug: "eventra",
     name: "Eventra",
-    category: "Product MVP",
+    category: "Mobile App",
     summary:
-      "An event management platform designed and built from scratch — event discovery, QR ticketing, organiser dashboards and certificate generation, taken from raw idea to complete MVP.",
+      "An event management platform designed and built from scratch: event discovery, QR ticketing, organiser dashboards and certificate generation, taken from raw idea to complete MVP.",
     href: "/portfolio/eventra",
     stack: ["React", "Node.js", "MongoDB"],
     metrics: [
@@ -274,6 +356,39 @@ export const projects: Project[] = [
       { label: "Concept to MVP", value: "2 weeks" },
     ],
     accent: "#CFF3E6",
+  },
+  {
+    slug: "ghcarehome",
+    name: "Grand Host Care Home",
+    category: "Website",
+    summary:
+      "A warm, family-run brochure site for a residential and dementia care home in Rotterdam, presenting its rooms, daily life and multilingual staff as a trustworthy alternative to institutional care.",
+    href: "https://www.ghcarehome.com/",
+    external: true,
+    stack: ["React", "Next.js"],
+    accent: "#D9C8A9",
+  },
+  {
+    slug: "international-translation-service",
+    name: "International Translation Service",
+    category: "Website",
+    summary:
+      "A document translation service platform offering fast, flat-rate certified translations, authentication and evaluation for visa, immigration and credential requirements.",
+    href: "https://www.internationaltranslationsservice.com/",
+    external: true,
+    stack: ["React", "Vite"],
+    accent: "#6EE7B7",
+  },
+  {
+    slug: "prime-grower-farms",
+    name: "Prime Grower Farms",
+    category: "Website",
+    summary:
+      "A brochure site for a three-generation family farm in Quebec, showcasing hand-tended strawberries, tomatoes and greens alongside its story and seasonal recruitment programme.",
+    href: "https://primegrowerfarms.com/",
+    external: true,
+    stack: ["React", "Next.js"],
+    accent: "#FCA311",
   },
   {
     slug: "ens-productions",
@@ -286,46 +401,9 @@ export const projects: Project[] = [
     stack: ["React", "Node.js", "MongoDB", "Express"],
     accent: "#7C3AED",
   },
-  {
-    slug: "esports-dashboard",
-    name: "Esports Tournament Dashboard",
-    category: "Web Application",
-    summary:
-      "Real-time esports dashboard generating JSON outputs for vMix broadcast integration — managing teams, players, matches and live statistics with seamless broadcast automation.",
-    href: "/portfolio/esports-dashboard",
-    stack: ["React", "Node.js", "MongoDB", "Express"],
-    metrics: [
-      { label: "Real-time data sync", value: "Sub-100ms" },
-      { label: "Broadcast integration", value: "vMix-ready" },
-      { label: "JSON export", value: "Automated" },
-    ],
-    accent: "#00D9FF",
-  },
 ];
 
 /* -------------------------------------------------------------------------- */
-/*  Differentiators                                                            */
-/* -------------------------------------------------------------------------- */
-
-export const principles = [
-  {
-    title: "Design that thinks",
-    description: "Ideas before interfaces. We solve before we style.",
-  },
-  {
-    title: "Tech that feels",
-    description: "Interfaces that understand users, not just instruct them.",
-  },
-  {
-    title: "Code that clicks",
-    description: "Structured, scalable, and clean — every line matters.",
-  },
-  {
-    title: "Strategy that sticks",
-    description:
-      "Clear paths. We map every step from first click to conversion.",
-  },
-] as const;
 
 export const serviceMarqueeItems = [
   "AI Voice Agents",
@@ -347,7 +425,7 @@ export const faqs: Faq[] = [
   {
     question: "What services do you provide?",
     answer:
-      "We specialise in branding, UI/UX design, website and app development, and MVP building for startups and businesses. Most engagements combine design and engineering, but you can take either on its own.",
+      "We specialise in custom software development, mobile app development, website development, UI/UX design, and brand identity for startups and growing businesses. Most engagements combine design and engineering, but you can take either on its own.",
   },
   {
     question: "How long does a typical project take?",
@@ -357,7 +435,7 @@ export const faqs: Faq[] = [
   {
     question: "Do you offer support after launch?",
     answer:
-      "Yes. We provide maintenance and post-launch support — monitoring, fixes and iterative improvements — to keep the product running smoothly as the business grows.",
+      "Yes. We provide maintenance and post-launch support, including monitoring, fixes and iterative improvements, to keep the product running smoothly as the business grows.",
   },
   {
     question: "Can I hire you for just design or just development?",
@@ -367,6 +445,6 @@ export const faqs: Faq[] = [
   {
     question: "How do we start working together?",
     answer:
-      "Send us a note through the contact form with a short description of what you are building. We will come back within two working days with initial thoughts and a suggested next step.",
+      "Send us a note through the contact form with a short description of what you are building. We will come back with initial thoughts and a suggested next step.",
   },
 ];

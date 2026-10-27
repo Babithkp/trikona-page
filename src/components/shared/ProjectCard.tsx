@@ -1,8 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
-import BrowserFrame from "@/components/ui/BrowserFrame";
 import PhoneFrame from "@/components/ui/PhoneFrame";
 import { cn } from "@/lib/utils";
 import { projectMedia } from "@/lib/project-media";
@@ -11,9 +10,11 @@ import type { Project } from "@/lib/site";
 /**
  * One project, presented consistently everywhere it appears.
  *
- * The whole card is a single link with a stretched hit area, so the target is
- * large on touch devices while screen readers still announce one clear
- * destination rather than three competing ones.
+ * Image-led: the photo does the talking, with a minimal caption underneath
+ * rather than a dense info panel. The whole card is a single link with a
+ * stretched hit area, so the target is large on touch devices while screen
+ * readers still announce one clear destination rather than three competing
+ * ones.
  */
 export default function ProjectCard({
   project,
@@ -21,7 +22,7 @@ export default function ProjectCard({
   priority = false,
 }: {
   project: Project;
-  /** Featured cards span the full grid width and show outcome metrics. */
+  /** Featured cards span the full grid width and show larger copy. */
   featured?: boolean;
   priority?: boolean;
 }) {
@@ -34,7 +35,7 @@ export default function ProjectCard({
   return (
     <article
       className={cn(
-        "group relative isolate flex w-full flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-sm",
+        "group relative isolate flex h-full w-full flex-col overflow-hidden rounded-2xl border border-line bg-surface",
         "transition-[transform,box-shadow,border-color] duration-400 ease-out",
         "hover:-translate-y-1 hover:border-line-2 hover:shadow-lg",
         "focus-within:-translate-y-1 focus-within:shadow-lg",
@@ -44,18 +45,17 @@ export default function ProjectCard({
       {/* Media */}
       <div
         className={cn(
-          "relative flex items-end justify-center overflow-hidden px-6 pt-8 sm:px-10 sm:pt-10",
-          featured ? "lg:w-[56%] lg:px-12 lg:pt-14" : "",
+          "relative overflow-hidden",
+          featured ? "aspect-[4/3] lg:aspect-auto lg:w-[56%]" : "aspect-[1/1]",
         )}
         style={{ backgroundColor: project.accent }}
       >
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/25 to-transparent"
-        />
-
         {media?.frame === "phone" ? (
-          <div className="flex items-end justify-center gap-3 sm:gap-5">
+          <div className="flex size-full items-end justify-center gap-3 pt-8 sm:gap-5">
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/25 to-transparent"
+            />
             {media.images.slice(0, 2).map((image, i) => (
               <PhoneFrame
                 key={i}
@@ -78,46 +78,40 @@ export default function ProjectCard({
             ))}
           </div>
         ) : media ? (
-          <BrowserFrame
-            className="translate-y-6 transition-transform duration-500 ease-out group-hover:translate-y-3"
-            label={project.name}
-          >
-            <Image
-              src={media.images[0]}
-              alt={media.alt}
-              priority={priority}
-              placeholder="blur"
-              sizes={
-                featured
-                  ? "(max-width: 1024px) 88vw, 640px"
-                  : "(max-width: 768px) 88vw, 520px"
-              }
-              className="aspect-[16/10] w-full object-cover object-top"
-            />
-          </BrowserFrame>
+          <Image
+            src={media.images[0]}
+            alt={media.alt}
+            priority={priority}
+            placeholder="blur"
+            sizes="(max-width: 768px) 85vw, 400px"
+            style={{ objectPosition: media.focus ?? "top" }}
+            className="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+          />
         ) : null}
+
+        <span className="absolute top-4 left-4 rounded-full bg-ink/70 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
+          {project.category}
+        </span>
+
+        <span
+          aria-hidden="true"
+          className="absolute right-4 bottom-4 grid size-10 place-items-center rounded-full bg-surface text-ink shadow-md transition-[transform,background-color,color] duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:bg-ink group-hover:text-surface"
+        >
+          <ArrowUpRight className="size-4" />
+        </span>
       </div>
 
       {/* Copy */}
       <div
         className={cn(
-          "flex flex-1 flex-col gap-4 p-6 sm:p-8",
-          featured && "lg:justify-center lg:p-12",
+          "flex flex-1 flex-col gap-1 p-4 sm:p-5",
+          featured && "lg:justify-center lg:gap-3 lg:p-10",
         )}
       >
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="rounded-full bg-surface-3 px-3 py-1 text-xs font-medium text-ink-3">
-            {project.category}
-          </span>
-          {project.external ? (
-            <span className="text-xs text-ink-4">Live site</span>
-          ) : null}
-        </div>
-
         <h3
           className={cn(
             "font-display font-semibold tracking-tight text-ink",
-            featured ? "text-h3" : "text-xl",
+            featured ? "text-h3" : "text-lg",
           )}
         >
           <Wrapper
@@ -134,28 +128,42 @@ export default function ProjectCard({
         <p
           className={cn(
             "text-sm leading-relaxed text-ink-3",
-            featured ? "max-w-[52ch] sm:text-base" : "line-clamp-4",
+            featured ? "max-w-[52ch] sm:text-base" : "line-clamp-2",
           )}
         >
           {project.summary}
         </p>
 
-        {featured && project.metrics ? (
-          <dl className="mt-2 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-line pt-6 sm:grid-cols-3">
-            {project.metrics.map((metric) => (
-              <div key={metric.label}>
-                <dt className="text-xs leading-snug text-ink-4">
-                  {metric.label}
-                </dt>
-                <dd className="mt-1 font-display text-2xl font-semibold tracking-tight text-gradient">
-                  {metric.value}
-                </dd>
-              </div>
-            ))}
+        {project.metrics ? (
+          <dl
+            className={cn(
+              "border-t border-line",
+              featured
+                ? "mt-2 grid grid-cols-2 gap-x-6 gap-y-5 pt-6 sm:grid-cols-3"
+                : "mt-2 grid grid-cols-3 gap-x-3 gap-y-3 pt-3",
+            )}
+          >
+            {(featured ? project.metrics : project.metrics.slice(0, 3)).map(
+              (metric) => (
+                <div key={metric.label}>
+                  <dt className="text-[0.6875rem] leading-snug text-ink-4">
+                    {metric.label}
+                  </dt>
+                  <dd
+                    className={cn(
+                      "mt-0.5 font-display font-semibold tracking-tight text-gradient",
+                      featured ? "text-2xl" : "text-base",
+                    )}
+                  >
+                    {metric.value}
+                  </dd>
+                </div>
+              ),
+            )}
           </dl>
         ) : null}
 
-        <ul className="mt-auto flex flex-wrap gap-1.5 pt-4">
+        <ul className="mt-auto flex flex-wrap gap-1.5 pt-3">
           {project.stack.map((tech) => (
             <li
               key={tech}
@@ -165,21 +173,6 @@ export default function ProjectCard({
             </li>
           ))}
         </ul>
-
-        <span className="inline-flex items-center gap-1.5 text-sm font-medium text-brand">
-          {project.external ? "Visit site" : "Read case study"}
-          {project.external ? (
-            <ArrowUpRight
-              aria-hidden="true"
-              className="size-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-            />
-          ) : (
-            <ArrowRight
-              aria-hidden="true"
-              className="size-4 transition-transform duration-200 group-hover:translate-x-1"
-            />
-          )}
-        </span>
       </div>
     </article>
   );

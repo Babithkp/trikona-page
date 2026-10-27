@@ -132,7 +132,7 @@ export default function HeroLeadForm({
 
     if (result.ok) {
       reset();
-      setStatus("Thanks — we'll reach out within two working days.");
+      setStatus("Thanks. We'll reach out shortly.");
       toast.success("Got it! We'll be in touch shortly.");
     } else {
       setStatus(result.message);

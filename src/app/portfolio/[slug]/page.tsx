@@ -7,7 +7,6 @@ import CaseStudyNav from "@/components/caseStudy/CaseStudyNav";
 import CtaSection from "@/components/shared/CtaSection";
 import ProjectCard from "@/components/shared/ProjectCard";
 import Aurora from "@/components/ui/Aurora";
-import BrowserFrame from "@/components/ui/BrowserFrame";
 import PhoneFrame from "@/components/ui/PhoneFrame";
 import JsonLd from "@/components/ui/JsonLd";
 import Reveal from "@/components/ui/Reveal";
@@ -154,16 +153,16 @@ export default async function CaseStudyPage({ params }: PageParams) {
                   ))}
                 </div>
               ) : media ? (
-                <BrowserFrame label={project.name}>
+                <div className="w-full overflow-hidden rounded-lg border border-line shadow-xl sm:rounded-xl">
                   <Image
-                    src={media.images[0]}
+                    src={media.fullImage ?? media.images[0]}
                     alt={media.alt}
                     priority
                     placeholder="blur"
                     sizes="(max-width: 1024px) 92vw, 620px"
                     className="h-auto w-full"
                   />
-                </BrowserFrame>
+                </div>
               ) : null}
             </Reveal>
           </div>
@@ -236,7 +235,7 @@ export default async function CaseStudyPage({ params }: PageParams) {
                                     {item.emphasis}
                                   </strong>
                                 ) : null}
-                                {item.emphasis ? " — " : null}
+                                {item.emphasis ? ": " : null}
                                 {item.text}
                               </span>
                             </li>
@@ -267,12 +266,22 @@ export default async function CaseStudyPage({ params }: PageParams) {
           <h2 id="related-heading" className="text-h3 text-ink">
             More of our work
           </h2>
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {related.map((item, i) => (
-              <Reveal key={item.slug} delay={i * 80} className="flex">
-                <ProjectCard project={item} />
-              </Reveal>
-            ))}
+          <div className="relative mt-8">
+            <div className="flex snap-x snap-mandatory gap-6 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {related.map((item, i) => (
+                <Reveal
+                  key={item.slug}
+                  delay={i * 80}
+                  className="w-[82vw] shrink-0 snap-start sm:w-80"
+                >
+                  <ProjectCard project={item} />
+                </Reveal>
+              ))}
+            </div>
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-y-0 right-0 hidden w-24 bg-gradient-to-l from-surface to-transparent sm:block"
+            />
           </div>
         </Container>
       </Section>

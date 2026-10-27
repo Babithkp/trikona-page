@@ -26,7 +26,7 @@ export default function Capabilities() {
         <SectionHeading
           align="left"
           title={<span id="capabilities-heading">Scope of work</span>}
-          description="Three phases, one team. Take the whole arc or step in wherever you need us."
+          description="Five phases, one team. Take the whole arc or step in wherever you need us."
           action={
             <Button asChild variant="outline">
               <Link href="/services">All services</Link>

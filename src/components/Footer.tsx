@@ -1,17 +1,19 @@
+"use client";
+
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   ArrowUpRight,
   Instagram,
   Linkedin,
   Mail,
   MapPin,
-  Phone,
 } from "lucide-react";
 
 import Logo from "./layout/Logo";
 import { cn } from "@/lib/utils";
-import { navLinks, projects, site } from "@/lib/site";
+import { landingPaths, navLinks, projects, site } from "@/lib/site";
 
 function XIcon({ className }: { className?: string }) {
   return (
@@ -32,6 +34,16 @@ const socialIcons = {
   X: XIcon,
 } as const;
 
+// Keeps the footer's "Selected work" column short and curated rather than
+// listing every project — order is deliberate (industries, then range).
+const footerProjectSlugs = [
+  "logistics-billing-software",
+  "esports-dashboard",
+  "rmr-frontend",
+  "prime-grower-farms",
+  "eventra",
+];
+
 const footerNav = [
   {
     heading: "Company",
@@ -39,16 +51,52 @@ const footerNav = [
   },
   {
     heading: "Selected work",
-    links: projects.map((project) => ({
-      href: project.href,
-      label: project.name,
-      external: Boolean(project.external),
-    })),
+    links: footerProjectSlugs
+      .map((slug) => projects.find((project) => project.slug === slug))
+      .filter((project) => project !== undefined)
+      .map((project) => ({
+        href: project.href,
+        label: project.name,
+        external: Boolean(project.external),
+      })),
   },
 ];
 
 export default function Footer() {
   const year = new Date().getFullYear();
+  const pathname = usePathname() ?? "/";
+  const isLandingPage = landingPaths.some(
+    (path) => pathname === path || pathname.startsWith(`${path}/`),
+  );
+
+  // Ad-landing pages get no link columns, no socials, no "Start a project" —
+  // nothing that gives a paid click a reason to leave before converting.
+  if (isLandingPage) {
+    return (
+      <footer className="mt-auto border-t border-line bg-surface">
+        <div className="container-page">
+          <div className="flex flex-col gap-6 py-12 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-3">
+              <Logo asLink={false} />
+              <ul className="flex flex-col gap-2 text-sm text-ink-3 sm:flex-row sm:items-center sm:gap-5">
+                <li className="inline-flex items-center gap-2">
+                  <Mail aria-hidden="true" className="size-4 text-ink-4" />
+                  {site.email}
+                </li>
+                <li className="inline-flex items-center gap-2">
+                  <MapPin aria-hidden="true" className="size-4 text-ink-4" />
+                  {site.locality}, {site.region}, India
+                </li>
+              </ul>
+            </div>
+            <p className="text-sm text-ink-4">
+              © {year} {site.legalName}. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
+    );
+  }
 
   return (
     <footer className="mt-auto border-t border-line bg-surface">
@@ -71,17 +119,6 @@ export default function Footer() {
                   {site.email}
                 </a>
               </li>
-              {site.phones.map((phone) => (
-                <li key={phone}>
-                  <a
-                    href={`tel:${phone.replace(/\s/g, "")}`}
-                    className="inline-flex items-center gap-2.5 text-ink-3 transition-colors hover:text-ink"
-                  >
-                    <Phone aria-hidden="true" className="size-4 text-ink-4" />
-                    {phone}
-                  </a>
-                </li>
-              ))}
               <li className="inline-flex items-center gap-2.5 text-ink-3">
                 <MapPin aria-hidden="true" className="size-4 text-ink-4" />
                 {site.locality}, {site.region}, India
@@ -124,9 +161,6 @@ export default function Footer() {
               <ul className="mt-5 flex flex-col gap-3 text-sm">
                 <li>
                   <FooterLink href="/contactus">Start a project</FooterLink>
-                </li>
-                <li>
-                  <FooterLink href="/careers">We&apos;re hiring</FooterLink>
                 </li>
               </ul>
 

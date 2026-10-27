@@ -8,6 +8,13 @@ import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/Section";
 import { serviceMarqueeItems } from "@/lib/site";
 
+const stats = [
+  { value: "15+", label: "Projects delivered" },
+  { value: "5+", label: "Industries served" },
+  { value: "₹20 Cr+", label: "Worth of transactions recorded" },
+  { value: "60%", label: "Faster operational workflows" },
+];
+
 export default function Hero() {
   return (
     // Pulled up by the header's height so the backdrop runs behind the
@@ -28,23 +35,23 @@ export default function Hero() {
                 ~21px, which is far too quiet for a hero. There the sentences
                 are allowed to wrap and the type is set much larger instead;
                 `text-balance` keeps the break at a natural phrase boundary
-                ("Digital products / that work.") rather than an awkward one,
+                ("Custom software / that works.") rather than an awkward one,
                 and evens out the line lengths. */}
             <h1 className="text-[length:min(8.6vw,3.5rem)] leading-[1.06] font-semibold tracking-[-0.035em] text-balance text-ink sm:text-hero sm:text-wrap">
               <span className="block sm:whitespace-nowrap">
                 Design. Build. <span className="text-gradient">Scale.</span>
               </span>
               <span className="block sm:whitespace-nowrap">
-                Digital products that work.
+                Custom software that works.
               </span>
             </h1>
           </Reveal>
 
           <Reveal delay={120}>
             <p className="text-lead max-w-[56ch] text-ink-3">
-              We craft tailor-made websites and applications with clean UI/UX,
-              scalable engineering and future-ready strategy — helping your
-              business stand out and grow online.
+              We build custom software, mobile apps and websites around how
+              your business actually works, backed by clean UI/UX and
+              engineering built to scale.
             </p>
           </Reveal>
 
@@ -72,14 +79,25 @@ export default function Hero() {
               <Link href="/portfolio">See our work</Link>
             </Button>
           </Reveal>
-
-          <Reveal delay={240} className="text-sm text-ink-4">
-            Bengaluru-based · Design &amp; engineering under one roof
-          </Reveal>
         </div>
+
+        <Reveal delay={220}>
+          <dl className="mx-auto mt-16 grid max-w-3xl grid-cols-2 gap-x-6 gap-y-8 border-y border-line py-10 sm:mt-20 sm:grid-cols-4">
+            {stats.map((stat) => (
+              <div key={stat.label} className="flex flex-col-reverse text-center">
+                <dt className="mt-1.5 flex min-h-10 items-start justify-center text-sm leading-snug text-ink-3">
+                  {stat.label}
+                </dt>
+                <dd className="font-display text-3xl font-semibold tracking-tight text-brand sm:text-4xl">
+                  {stat.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </Reveal>
       </Container>
 
-      <div className="mt-20 sm:mt-24">
+      <div className="mt-16 sm:mt-20">
         <Container>
           <p className="mb-6 text-center text-xs font-semibold tracking-[0.14em] text-ink-4 uppercase">
             Services we provide

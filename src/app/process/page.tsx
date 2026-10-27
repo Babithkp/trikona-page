@@ -13,7 +13,7 @@ import { processSteps, siteUrl } from "@/lib/site";
 export const metadata = pageMetadata({
   title: "Our Design & Development Process",
   description:
-    "How Trikona delivers: discovery, strategy, design, development, quality assurance and launch support — a clear six-stage process built around clarity and collaboration.",
+    "How Trikona delivers: discovery, strategy, design, development, quality assurance and launch support, a clear six-stage process built around clarity and collaboration.",
   path: "/process",
 });
 
@@ -44,7 +44,6 @@ export default function ProcessPage() {
       />
 
       <PageHero
-        breadcrumbs={[{ name: "Process", path: "/process" }]}
         title={
           <>
             A process built on{" "}

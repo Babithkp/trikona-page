@@ -110,16 +110,15 @@ export function SectionHeading({
     >
       <div
         className={cn(
-          "flex flex-col gap-4",
+          "flex w-full flex-col gap-4",
           centered ? "items-center" : "items-start",
         )}
       >
         {eyebrow ? <Eyebrow>{eyebrow}</Eyebrow> : null}
         <Tag
           className={cn(
-            "text-h2 text-ink",
-            centered && "max-w-[22ch]",
-            !centered && "max-w-[20ch]",
+            "w-full text-h2 text-ink",
+            centered ? "mx-auto max-w-[22ch]" : "max-w-[20ch]",
           )}
         >
           {title}
@@ -127,8 +126,8 @@ export function SectionHeading({
         {description ? (
           <p
             className={cn(
-              "text-lead text-ink-3",
-              centered ? "max-w-[58ch]" : "max-w-[54ch]",
+              "w-full text-lead text-ink-3",
+              centered ? "mx-auto max-w-[58ch]" : "max-w-[54ch]",
             )}
           >
             {description}

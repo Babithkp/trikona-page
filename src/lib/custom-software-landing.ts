@@ -34,17 +34,17 @@ export const landingCaseStudies: LandingCaseStudy[] = [
     stack: ["React", "Tauri", "Node.js", "MongoDB"],
   },
   {
-    slug: "bgmi-overlay-admin",
+    slug: "esports-dashboard",
     industry: "Esports & Live Broadcast Production",
     challenge:
-      "Tournament staff needed to manage team and player rosters and swap teams on-screen mid-broadcast without touching code or redeploying anything.",
+      "Tournament organisers needed live team, player and match data flowing straight into the broadcast, with zero manual re-entry during a live show.",
     solution:
-      "A Next.js admin panel with live team-swap API routes feeding the OCR overlay in real time, backed by MongoDB and AWS S3 for team and player images.",
+      "A real-time tournament dashboard that generates JSON outputs for direct vMix integration, managing teams, players, matches and live statistics.",
     results: [
-      { label: "Team swap time on-air", value: "<5s" },
-      { label: "On-air roster errors cut", value: "90%" },
+      { label: "Data sync latency", value: "Sub-100ms" },
+      { label: "Broadcast integration", value: "vMix-ready" },
     ],
-    stack: ["Next.js", "React", "Prisma", "MongoDB", "AWS S3"],
+    stack: ["React", "Node.js", "MongoDB", "Express"],
   },
   {
     slug: "billsoft-frontend",
@@ -55,22 +55,9 @@ export const landingCaseStudies: LandingCaseStudy[] = [
       "A Tauri desktop billing suite with GSTIN-validated invoices and quotes, auto-generated PDFs, inventory and expense tracking, and one-click invoice emailing.",
     results: [
       { label: "Invoicing time reduced", value: "70%" },
-      { label: "GST compliance errors", value: "0" },
+      { label: "GST compliance", value: "100%" },
     ],
     stack: ["Tauri", "React", "TypeScript", "React-PDF", "Axios"],
-  },
-  {
-    slug: "bgmi-hub",
-    industry: "Esports & Live Broadcast Production",
-    challenge:
-      "Broadcasters had no way to auto-identify players during BGMI matches — overlays had to be updated by hand, slot by slot, in real time.",
-    solution:
-      "A Windows OCR tool that reads the in-game HUD every second, fuzzy-matches each player's name and slot against a team database, and drives a live OBS overlay with the right logo, color and player image.",
-    results: [
-      { label: "Overlay update latency", value: "<1s" },
-      { label: "Manual overlay edits eliminated", value: "100%" },
-    ],
-    stack: ["Python", "EasyOCR", "OpenCV", "Flask", "Tkinter", "rapidfuzz"],
   },
   {
     slug: "rmr-frontend",
@@ -81,22 +68,9 @@ export const landingCaseStudies: LandingCaseStudy[] = [
       "A React web app with per-store stock reconciliation, BOM and item tracking, order and return management, and Excel-exportable sales reports.",
     results: [
       { label: "Stock reconciliation time", value: "65% faster" },
-      { label: "Outlets managed from one dashboard", value: "5+" },
+      { label: "Outlets managed from one dashboard", value: "30+" },
     ],
     stack: ["React", "TypeScript", "Ant Design", "ExcelJS", "Axios"],
-  },
-  {
-    slug: "eventra",
-    industry: "Events & Ticketing",
-    challenge:
-      "Needed to go from idea to a working event platform — discovery, ticketing and organiser tools — in a matter of weeks, not months.",
-    solution:
-      "Designed and built an event management platform from scratch: event discovery, QR ticketing, organiser dashboards and certificate generation.",
-    results: [
-      { label: "Concept to MVP", value: "2 weeks" },
-      { label: "Core features shipped", value: "15+" },
-    ],
-    stack: ["React", "Node.js", "MongoDB"],
   },
 ];
 
@@ -109,21 +83,21 @@ export type LandingTestimonial = {
 export const landingTestimonials: LandingTestimonial[] = [
   {
     quote:
-      "PLACEHOLDER — \"They understood our billing mess in the first call and shipped something our branches actually use every day.\"",
-    name: "PLACEHOLDER — Client Name",
-    role: "PLACEHOLDER — Operations Head, Logistics",
+      "PLACEHOLDER: \"They understood our billing mess in the first call and shipped something our branches actually use every day.\"",
+    name: "PLACEHOLDER: Client Name",
+    role: "PLACEHOLDER: Operations Head, Logistics",
   },
   {
     quote:
-      "PLACEHOLDER — \"We went from a rough idea to a working product in two weeks, with steady, visible progress the whole way.\"",
-    name: "PLACEHOLDER — Client Name",
-    role: "PLACEHOLDER — Founder, Events Startup",
+      "PLACEHOLDER: \"We went from a rough idea to a working product in two weeks, with steady, visible progress the whole way.\"",
+    name: "PLACEHOLDER: Client Name",
+    role: "PLACEHOLDER: Founder, Events Startup",
   },
   {
     quote:
-      "PLACEHOLDER — \"Post-launch support has been the real difference. Issues get fixed the same day, not pushed to the next sprint.\"",
-    name: "PLACEHOLDER — Client Name",
-    role: "PLACEHOLDER — Plant Manager, Manufacturing",
+      "PLACEHOLDER: \"Post-launch support has been the real difference. Issues get fixed the same day, not pushed to the next sprint.\"",
+    name: "PLACEHOLDER: Client Name",
+    role: "PLACEHOLDER: Plant Manager, Manufacturing",
   },
 ];
 

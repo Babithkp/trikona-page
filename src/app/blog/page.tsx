@@ -12,15 +12,12 @@ import { getPublishedPosts } from "@/lib/blog";
 import { siteUrl } from "@/lib/site";
 
 export const metadata = pageMetadata({
-  title: "Blog — UI/UX, Web Development & Product Insights",
+  title: "Blog: UI/UX, Web Development & Product Insights",
   description:
     "Notes from the Trikona team on UI/UX design, product strategy, web development and shipping startup MVPs.",
   path: "/blog",
 });
 
-/* Rebuild the index every 5 minutes so newly published posts appear without a
-   redeploy, while still serving a static page to most visitors. */
-export const revalidate = 300;
 
 export default async function BlogPage() {
   const posts = await getPublishedPosts();
@@ -49,15 +46,13 @@ export default async function BlogPage() {
       />
 
       <PageHero
-
-        breadcrumbs={[{ name: "Blog", path: "/blog" }]}
         title={
           <>
-            Notes on design, code and{" "}
-            <span className="text-gradient">shipping</span>
+            Notes on custom software, AI and{" "}
+            <span className="text-gradient">automation</span>
           </>
         }
-        description="What we've learnt building websites, web apps and MVPs — written for the people who have to make the decisions."
+        description="Practical guidance on building and buying business software, written for the owners and decision-makers who have to choose."
       />
 
       <Section compact aria-labelledby="posts-heading">

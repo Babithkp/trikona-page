@@ -8,7 +8,7 @@ import { ImageResponse } from "next/og";
  * from this route.
  */
 export const alt =
-  "Trikona — UI/UX design, web and app development studio in Bengaluru";
+  "Trikona: UI/UX design, web and app development studio in Bengaluru";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

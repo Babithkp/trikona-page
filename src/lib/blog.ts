@@ -1,5 +1,4 @@
-import { unstable_cache } from "next/cache";
-import prisma from "./prisma";
+import { blogPosts, type BlogPost } from "./blog-posts";
 
 export type BlogSummary = {
   id: string;
@@ -11,59 +10,21 @@ export type BlogSummary = {
   createdAt: Date | string;
 };
 
-/**
- * Blog queries wrapped so a missing or unreachable database degrades to an
- * empty state instead of a 500. The marketing pages must stay online even if
- * the CMS backing store is down. Cached for 5 minutes for performance.
- */
-const getCachedPosts = unstable_cache(
-  async () => {
-    try {
-      return await prisma.blog.findMany({
-        orderBy: { createdAt: "desc" },
-        select: {
-          id: true,
-          title: true,
-          slug: true,
-          description: true,
-          readMin: true,
-          imageUrl: true,
-          createdAt: true,
-        },
-      });
-    } catch (error) {
-      console.error("[blog] Failed to load posts:", error);
-      return [];
-    }
-  },
-  ["blog-posts"],
-  { revalidate: 300, tags: ["blog"] }
+const sortedPosts = [...blogPosts].sort(
+  (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
 );
 
 export async function getPublishedPosts(): Promise<BlogSummary[]> {
-  return getCachedPosts();
+  return sortedPosts.map(({ content: _content, ...summary }) => summary);
 }
 
-const getCachedPost = unstable_cache(
-  async (slug: string) => {
-    try {
-      return await prisma.blog.findUnique({ where: { slug } });
-    } catch (error) {
-      console.error(`[blog] Failed to load post "${slug}":`, error);
-      return null;
-    }
-  },
-  ["blog-post"],
-  { revalidate: 300, tags: ["blog"] }
-);
-
-export async function getPostBySlug(slug: string) {
-  return getCachedPost(slug);
+export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
+  return sortedPosts.find((post) => post.slug === slug) ?? null;
 }
 
 /** "12 March 2025" — stable across locales, readable, and machine-parsable. */
 export function formatPostDate(date: Date | string) {
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  const dateObj = typeof date === "string" ? new Date(date) : date;
   return new Intl.DateTimeFormat("en-GB", {
     day: "numeric",
     month: "long",

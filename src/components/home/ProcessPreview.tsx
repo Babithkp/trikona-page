@@ -25,7 +25,7 @@ export default function ProcessPreview() {
       <Container>
         <SectionHeading
           title={<span id="process-heading">The Trikona way</span>}
-          description="A proven end-to-end process — from onboarding through design, development and QA — that turns an idea into a product your business can actually stand on."
+          description="A proven end-to-end process, from onboarding through design, development and QA, that turns an idea into a product your business can actually stand on."
         />
 
         <ol className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">

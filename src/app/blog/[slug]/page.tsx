@@ -16,8 +16,10 @@ import { site, siteUrl } from "@/lib/site";
 
 type PageParams = { params: Promise<{ slug: string }> };
 
-/** Matches the blog index: content refreshes without a redeploy. */
-export const revalidate = 300;
+export async function generateStaticParams() {
+  const posts = await getPublishedPosts();
+  return posts.map((post) => ({ slug: post.slug }));
+}
 
 export async function generateMetadata({ params }: PageParams) {
   const { slug } = await params;
@@ -61,9 +63,7 @@ export default async function BlogPostPage({ params }: PageParams) {
   // already reading.
   const related = allPosts.filter((item) => item.slug !== slug).slice(0, 3);
 
-  const publishedAt = typeof post.createdAt === 'string'
-    ? post.createdAt
-    : post.createdAt.toISOString();
+  const publishedAt = post.createdAt;
 
   const articleSchema = {
     "@context": "https://schema.org",

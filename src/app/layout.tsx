@@ -27,9 +27,9 @@ const sora = Sora({
   variable: "--font-sora",
 });
 
-const title = "Trikona — UI/UX Design, Web & App Development Studio, Bengaluru";
+const title = "Trikona: UI/UX Design, Web & App Development Studio, Bengaluru";
 const description =
-  "Trikona is a Bengaluru-based product studio building websites, web apps and MVPs. UI/UX design, scalable engineering and clear strategy for startups and growing businesses.";
+  "Trikona is a Bengaluru-based product studio specialising in custom software, mobile app and web development, backed by UI/UX design and clear strategy for startups and growing businesses.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
