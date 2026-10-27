@@ -15,7 +15,15 @@ const sortedPosts = [...blogPosts].sort(
 );
 
 export async function getPublishedPosts(): Promise<BlogSummary[]> {
-  return sortedPosts.map(({ content: _content, ...summary }) => summary);
+  return sortedPosts.map((post) => ({
+    id: post.id,
+    title: post.title,
+    slug: post.slug,
+    description: post.description,
+    readMin: post.readMin,
+    imageUrl: post.imageUrl,
+    createdAt: post.createdAt,
+  }));
 }
 
 export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
